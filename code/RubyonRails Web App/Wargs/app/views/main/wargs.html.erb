@@ -1,0 +1,91 @@
+     <div class="container theme-showcase" role="main">
+ <div class="jumbotron">
+                        <img align="right" width="100" height="100" src="assets/cluster.png" />
+
+        <h1>WARGS</h1>
+        <p>Multi Dimensional News Summarization</p>
+        <center>
+<form id="searchForm" class="form-inline" role="form" action="<%= wargs_path %>" >
+  <div class="form-group">
+    <label for="searchItem" class="sr-only"></label>
+    <input style="width:600px" class="form-control" id="searchItem" name= "searchItem" placeholder="Type here to search">
+  </div>
+ 
+  <button type="button" id="submitButton" class="btn btn-primary">Search</button>
+</form>
+<script type="text/javascript">
+document.getElementById("submitButton").onclick = function(){
+
+if (document.getElementById("searchItem").value == "" )
+{
+  alert("Please enter a search item");
+}
+else
+{
+  document.getElementById("searchForm").submit();
+}
+}
+</script>
+
+</div>
+</center>
+
+<% if !@queryResult.nil? and @queryResult['response']['numFound'] == 0 %>
+
+           <center>  <h3> OOPS !! We could not get an insight on that !! <h3>
+          <img src="/assets/oops.jpg"  />
+<% end %>
+
+       <% 
+       if @queryResult.nil?
+        %>
+
+        <center>  <h3> Use the search box above to start exploring <h3>
+
+         <center>
+       <% else %>
+<% if !@queryResult.nil? and @queryResult['response']['numFound'] != 0 %>
+
+       <div class="row">
+        <div class="col-md-1"></div>
+  <div class="col-md-7"> <a href="<%= insight_path %>?searchItem=<%= @queryResult['responseHeader']['params']['q'] %>&insight=topics" class="btn btn-success btn-lg" role="button">Topics Related to <%= @queryResult['responseHeader']['params']['q'] %> </a> </td></div>
+  <div class="col-md-4"><a href="<%= insight_path %>?searchItem=<%= @queryResult['responseHeader']['params']['q'] %>&insight=events" class="btn btn-danger btn-lg" role="button">Events Related to <%= @queryResult['responseHeader']['params']['q'] %> </a></div>
+</div>
+       <br/>
+<% if @spellCorrected && @spellCorrected['status'] == true %>
+<div class="alert alert-danger alert-dismissible fade in" role="alert">
+      <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+      <b style="font-size : 14px">We could not find anything matching <u><%= @spellCorrected['previousQuery']  %> </u></b>
+</div>
+
+<% end %>
+ 
+
+<h4><p>Showing Results for : <u><%= @queryResult['responseHeader']['params']['q'] %> </u> </p> </h4>
+<h4 > Total Search Results : </strong>
+       <%= @queryResult['response']['numFound'] %> </h4>
+<% end %>
+<br/>
+       <table class="table table-striped">
+        <% @queryResult['response']['docs'].each { |doc| %>
+        <tr>
+      <td><strong> <%= doc['title'] %><strong></td>
+        <td><a href='<%= doc['url'] %>' > <%= doc['url'] %> </a></td>
+        <tr><td>   
+          <%  @queryResult['highlighting'].each { |highlightedDoc|
+              if highlightedDoc[0] == doc['url']
+            %>
+                    <p><%=  highlightedDoc[1]['content'][1].html_safe %></p>
+                    <%  
+                  end
+                  }   %>
+
+ <td></tr>
+      </tr>
+      <% } %>
+      
+    </table>
+    <% end %>
+    
+		
+ </div>

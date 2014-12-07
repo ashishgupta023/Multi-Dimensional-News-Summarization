@@ -1,0 +1,60 @@
+     <div class="container theme-showcase" role="main">
+ <div class="jumbotron">
+        <h1>WARGS</h1>
+        <p>Multi Dimensional News Summarization</p>
+        <p><a href="#" class="btn btn-primary btn-lg" role="button">Coming Soon!! Don't Click!!</a></p>
+      </div>
+      <b>Keywords</b><br/>
+
+
+      <% 
+      i = 0 
+      size = @aResult['keywords'].size 
+      %>
+
+      <% while i < size do %>
+      	<p> <%= @aResult['keywords'][i]['text'] %> <p> 
+      <%
+      i = i +1
+      end 
+      %>
+
+      <br/><b>Web URLs</b> <br/>
+       <% @gResult['response']['results'].each {  |res| %> 
+       <%= res['webUrl'] %>
+       <br/>
+       <% } %>
+			
+
+    <br/><br/>
+     <table class="table table-striped">
+        <% @solrSeedResult['response']['docs'].each { |doc| %>
+        <tr>
+      <td><strong> <%= doc['title'] %><strong></td>
+        <tr><td><%= doc['full_text'][0,100]%><td></tr>
+      </tr>
+      <% } %>
+      
+    </table>
+
+<br/><br/>
+            <strong><p>Query : <%= @queryResult['responseHeader']['params']['q'] %> </p> </strong>
+
+<strong > Total Found : </strong>
+       <%= @queryResult['response']['numFound'] %> 
+
+       <br/>
+       <table class="table table-striped">
+        <% @queryResult['response']['docs'].each { |doc| %>
+        <tr>
+      <td><strong> <%= doc['title'] %><strong></td>
+        <td><a href='<%= doc['url'] %>' > <%= doc['url'] %> </a></td>
+        <tr><td><%= doc['content'][0,200] %><td></tr>
+      </tr>
+      <% } %>
+      
+    </table>
+    
+			
+		
+ </div>

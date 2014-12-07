@@ -1,0 +1,15 @@
+<config xmlns="http://bayan.ir" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://bayan.ir http://raw.github.com/BayanGroup/nutch-custom-search/master/zal.extractor/src/main/resources/extractors.xsd">
+   
+	<fields>
+        <field name="publishedDate"  />
+    </fields>
+    <documents>
+        <document url="." engine="css">
+            <extract-to field="publishedDate">
+                <attribute name="content">
+                    <expr value="meta[property=article:published_time]" />
+                </attribute>
+            </extract-to>
+        </document>
+    </documents>
+</config>
